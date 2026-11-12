@@ -39,7 +39,8 @@ func _update_stick(pointer: Vector2) -> void:
 	if offset.length() > knob_limit:
 		offset = offset.normalized() * knob_limit
 	_knob_position = center + offset
-	_output = Vector2(offset.x, -offset.y) / knob_limit
+	# Input.get_vector convention: negative Y means forward/up.
+	_output = offset / knob_limit
 	if _output.length() < dead_zone:
 		_output = Vector2.ZERO
 	queue_redraw()
