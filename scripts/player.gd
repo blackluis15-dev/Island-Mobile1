@@ -1,11 +1,14 @@
 extends CharacterBody3D
-## Starter movement controller: keyboard for editor testing and virtual joystick for touch.
+## Starter movement controller plus basic resource harvesting and inventory.
 
 @export var move_speed: float = 5.0
 @export var acceleration: float = 18.0
 @export var gravity: float = 20.0
+@export var harvest_range: float = 3.4
 
 @onready var camera: Camera3D = $Camera3D
+
+var inventory: Dictionary = {}
 
 func _physics_process(delta: float) -> void:
 	var input_vector := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
@@ -15,7 +18,6 @@ func _physics_process(delta: float) -> void:
 		if touch_input.length() > 0.12:
 			input_vector = touch_input
 
-	# Input.get_vector uses negative Y for forward; camera forward is -basis.z.
 	var forward := -camera.global_basis.z
 	var right := camera.global_basis.x
 	forward.y = 0.0
@@ -37,3 +39,50 @@ func _physics_process(delta: float) -> void:
 		velocity.y = 0.0
 
 	move_and_slide()
+
+	if Input.is_action_just_pressed("interact"):
+		interact()
+	_update_inventory_display()
+
+func interact() -> void:
+	var target: Node3D = null
+	var closest_distance := harvest_range
+	for node in get_tree().get_nodes_in_group("harvestable"):
+		if not is_instance_valid(node):
+			continue
+		var resource := node as Node3D
+		var distance := global_position.distance_to(resource.global_position)
+		if distance <= closest_distance:
+			closest_distance = distance
+			target = resource
+
+	if target == null:
+		return
+
+	var destroyed: bool = target.call("apply_hit")
+	if destroyed:
+		var drops: Dictionary = target.call("get_drops")
+		for item in drops.keys():
+			inventory[item] = int(inventory.get(item, 0)) + int(drops[item])
+		target.queue_free()
+	_update_inventory_display()
+
+func _update_inventory_display() -> void:
+	var label := get_node_or_null("/root/Main/UI/InventoryLabel")
+	if label == null:
+		return
+	if inventory.is_empty():
+		label.text = "Mochila: vacía"
+		return
+
+	var item_names := {
+		"wood": "Madera",
+		"leaves": "Hojas",
+		"sapling": "Brote",
+		"stone": "Piedra"
+	}
+	var entries: Array[String] = []
+	for item in inventory.keys():
+		var display_name: String = item_names.get(item, str(item))
+		entries.append("%s: %d" % [display_name, int(inventory[item])])
+	label.text = "Mochila: " + "  |  ".join(entries)
