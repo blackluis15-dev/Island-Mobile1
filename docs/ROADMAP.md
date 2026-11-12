@@ -10,10 +10,13 @@
 - [ ] Ajustar cámara, escala, límites de isla y controles en un dispositivo Android.
 
 ## Prototipo 0.2: recolección
-- [ ] Interacción contextual con árboles, rocas y plantas.
-- [ ] Durabilidad de recursos y herramientas.
-- [ ] Drops de madera, hojas, piedra y brotes.
-- [ ] Inventario con cantidades y capacidad.
+- [x] Interacción básica con árboles y rocas (tecla E y botón táctil).
+- [x] Durabilidad por recurso: árboles 5 impactos y rocas 3 impactos.
+- [x] Drops al completar la recolección: madera, hojas, brotes y piedra.
+- [x] Inventario inicial con cantidades visibles en pantalla.
+- [ ] Prueba en Godot y ajuste de alcance, controles y balance.
+
+> Nota: las funciones anteriores ya están implementadas en código, pero no se consideran validadas hasta ejecutar el proyecto.
 
 ## Prototipo 0.3: supervivencia y agricultura
 - [ ] Hambre, sed, salud y energía.
