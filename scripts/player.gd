@@ -15,14 +15,14 @@ func _physics_process(delta: float) -> void:
 		if touch_input.length() > 0.12:
 			input_vector = touch_input
 
-	# Camera-relative movement keeps controls intuitive in an isometric view.
+	# Input.get_vector uses negative Y for forward; camera forward is -basis.z.
 	var forward := -camera.global_basis.z
 	var right := camera.global_basis.x
 	forward.y = 0.0
 	right.y = 0.0
 	forward = forward.normalized()
 	right = right.normalized()
-	var direction := (right * input_vector.x + forward * input_vector.y).normalized()
+	var direction := (right * input_vector.x - forward * input_vector.y).normalized()
 
 	if direction.length() > 0.01:
 		velocity.x = move_toward(velocity.x, direction.x * move_speed, acceleration * delta)
