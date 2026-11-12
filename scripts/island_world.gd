@@ -85,6 +85,18 @@ func _build_island() -> void:
 		var z := rng.randf_range(-13.0, 13.0)
 		_add_rock(Vector3(x, 0.0, z))
 
+	_add_farm_plot(Vector3(5.0, 0.0, 4.0))
+	_add_farm_plot(Vector3(7.2, 0.0, 4.0))
+	_add_farm_plot(Vector3(5.0, 0.0, 6.2))
+	_add_farm_plot(Vector3(7.2, 0.0, 6.2))
+
+func _add_farm_plot(at: Vector3) -> void:
+	var plot := StaticBody3D.new()
+	plot.name = "FarmPlot"
+	plot.set_script(load("res://scripts/farm_plot.gd"))
+	plot.position = at
+	add_child(plot)
+
 func _add_tree(at: Vector3) -> void:
 	# StaticBody3D makes the trunk a solid obstacle for the player.
 	var tree := StaticBody3D.new()
@@ -193,6 +205,7 @@ func _build_hud() -> void:
 	layer.add_child(inventory_label)
 
 	var hint := Label.new()
+	hint.name = "HintLabel"
 	hint.text = "Explora • WASD / flechas o joystick | E para recolectar"
 	hint.position = Vector2(18.0, 44.0)
 	hint.add_theme_font_size_override("font_size", 15)
