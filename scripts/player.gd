@@ -11,7 +11,7 @@ extends CharacterBody3D
 const TOOL_ORDER: Array[String] = ["hand", "axe", "pickaxe"]
 const TOOL_NAMES := {"hand": "Manos", "axe": "Hacha", "pickaxe": "Pico"}
 
-var inventory: Dictionary = {}
+var inventory: Dictionary = {"seeds": 5, "water": 8}
 var current_tool_index: int = 0
 var tool_durability: Dictionary = {"axe": 60, "pickaxe": 60}
 
@@ -69,6 +69,20 @@ func _get_hit_power(resource: Node) -> int:
 	return 1
 
 func interact() -> void:
+	var farm_target: Node3D = null
+	var farm_distance := harvest_range
+	for plot in get_tree().get_nodes_in_group("farm_plot"):
+		if not is_instance_valid(plot):
+			continue
+		var farm_node := plot as Node3D
+		var distance_to_plot := global_position.distance_to(farm_node.global_position)
+		if distance_to_plot <= farm_distance:
+			farm_distance = distance_to_plot
+			farm_target = farm_node
+	if farm_target != null:
+		farm_target.call("interact", self)
+		return
+
 	var target: Node3D = null
 	var closest_distance := harvest_range
 	for node in get_tree().get_nodes_in_group("harvestable"):
@@ -114,7 +128,10 @@ func _update_inventory_display() -> void:
 		"wood": "Madera",
 		"leaves": "Hojas",
 		"sapling": "Brote",
-		"stone": "Piedra"
+		"stone": "Piedra",
+		"seeds": "Semillas",
+		"water": "Agua",
+		"berries": "Frutos"
 	}
 	var entries: Array[String] = []
 	for item in inventory.keys():
