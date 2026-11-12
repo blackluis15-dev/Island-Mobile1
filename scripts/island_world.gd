@@ -89,6 +89,10 @@ func _add_tree(at: Vector3) -> void:
 	# StaticBody3D makes the trunk a solid obstacle for the player.
 	var tree := StaticBody3D.new()
 	tree.name = "Tree"
+	tree.set_script(load("res://scripts/harvestable.gd"))
+	tree.set("resource_label", "Árbol")
+	tree.set("max_durability", 5)
+	tree.set("drop_table", {"wood": 3, "leaves": 2, "sapling": 1})
 	tree.position = at
 
 	var trunk := MeshInstance3D.new()
@@ -127,6 +131,10 @@ func _add_rock(at: Vector3) -> void:
 	# The mesh and its collision share the same parent transform.
 	var rock := StaticBody3D.new()
 	rock.name = "Rock"
+	rock.set_script(load("res://scripts/harvestable.gd"))
+	rock.set("resource_label", "Roca")
+	rock.set("max_durability", 3)
+	rock.set("drop_table", {"stone": 2})
 	rock.position = at + Vector3(0.0, 0.0, 0.0)
 
 	var mesh_instance := MeshInstance3D.new()
@@ -168,8 +176,16 @@ func _build_hud() -> void:
 	title.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
 	layer.add_child(title)
 
+	var inventory_label := Label.new()
+	inventory_label.name = "InventoryLabel"
+	inventory_label.text = "Mochila: vacía"
+	inventory_label.position = Vector2(18.0, 72.0)
+	inventory_label.add_theme_font_size_override("font_size", 16)
+	inventory_label.add_theme_color_override("font_color", Color(1.0, 0.96, 0.82))
+	layer.add_child(inventory_label)
+
 	var hint := Label.new()
-	hint.text = "Explora la isla  •  WASD / flechas o joystick táctil"
+	hint.text = "Explora • WASD / flechas o joystick | E para recolectar"
 	hint.position = Vector2(18.0, 44.0)
 	hint.add_theme_font_size_override("font_size", 15)
 	hint.add_theme_color_override("font_color", Color(0.95, 0.95, 0.88))
@@ -188,3 +204,18 @@ func _build_hud() -> void:
 	joystick.offset_bottom = -24.0
 	joystick.mouse_filter = Control.MOUSE_FILTER_STOP
 	layer.add_child(joystick)
+
+	var harvest_button := Button.new()
+	harvest_button.name = "HarvestButton"
+	harvest_button.text = "Recolectar"
+	harvest_button.anchor_left = 1.0
+	harvest_button.anchor_top = 1.0
+	harvest_button.anchor_right = 1.0
+	harvest_button.anchor_bottom = 1.0
+	harvest_button.offset_left = -190.0
+	harvest_button.offset_top = -112.0
+	harvest_button.offset_right = -24.0
+	harvest_button.offset_bottom = -30.0
+	harvest_button.add_theme_font_size_override("font_size", 20)
+	layer.add_child(harvest_button)
+	harvest_button.pressed.connect(get_node("Player").interact)
