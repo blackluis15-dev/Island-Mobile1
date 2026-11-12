@@ -176,6 +176,14 @@ func _build_hud() -> void:
 	title.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
 	layer.add_child(title)
 
+	var tool_label := Label.new()
+	tool_label.name = "ToolLabel"
+	tool_label.text = "Herramienta: Manos"
+	tool_label.position = Vector2(18.0, 98.0)
+	tool_label.add_theme_font_size_override("font_size", 16)
+	tool_label.add_theme_color_override("font_color", Color(0.88, 0.94, 1.0))
+	layer.add_child(tool_label)
+
 	var inventory_label := Label.new()
 	inventory_label.name = "InventoryLabel"
 	inventory_label.text = "Mochila: vacía"
@@ -219,3 +227,18 @@ func _build_hud() -> void:
 	harvest_button.add_theme_font_size_override("font_size", 20)
 	layer.add_child(harvest_button)
 	harvest_button.pressed.connect(get_node("Player").interact)
+
+	var tool_button := Button.new()
+	tool_button.name = "ToolButton"
+	tool_button.text = "Cambiar herramienta"
+	tool_button.anchor_left = 1.0
+	tool_button.anchor_top = 1.0
+	tool_button.anchor_right = 1.0
+	tool_button.anchor_bottom = 1.0
+	tool_button.offset_left = -220.0
+	tool_button.offset_top = -204.0
+	tool_button.offset_right = -24.0
+	tool_button.offset_bottom = -122.0
+	tool_button.add_theme_font_size_override("font_size", 16)
+	layer.add_child(tool_button)
+	tool_button.pressed.connect(get_node("Player").cycle_tool)
