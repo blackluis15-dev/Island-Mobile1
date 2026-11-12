@@ -86,8 +86,11 @@ func _build_island() -> void:
 		_add_rock(Vector3(x, 0.0, z))
 
 func _add_tree(at: Vector3) -> void:
-	var tree := Node3D.new()
+	# StaticBody3D makes the trunk a solid obstacle for the player.
+	var tree := StaticBody3D.new()
+	tree.name = "Tree"
 	tree.position = at
+
 	var trunk := MeshInstance3D.new()
 	var trunk_mesh := CylinderMesh.new()
 	trunk_mesh.top_radius = 0.16
@@ -99,6 +102,14 @@ func _add_tree(at: Vector3) -> void:
 	trunk_mat.albedo_color = Color(0.32, 0.20, 0.11)
 	trunk.material_override = trunk_mat
 	tree.add_child(trunk)
+
+	var trunk_collision := CollisionShape3D.new()
+	var trunk_shape := CapsuleShape3D.new()
+	trunk_shape.radius = 0.32
+	trunk_shape.height = 2.0
+	trunk_collision.shape = trunk_shape
+	trunk_collision.position.y = 1.0
+	tree.add_child(trunk_collision)
 
 	var leaves := MeshInstance3D.new()
 	var leaf_mesh := SphereMesh.new()
@@ -113,16 +124,30 @@ func _add_tree(at: Vector3) -> void:
 	add_child(tree)
 
 func _add_rock(at: Vector3) -> void:
-	var rock := MeshInstance3D.new()
+	# The mesh and its collision share the same parent transform.
+	var rock := StaticBody3D.new()
+	rock.name = "Rock"
+	rock.position = at + Vector3(0.0, 0.0, 0.0)
+
+	var mesh_instance := MeshInstance3D.new()
 	var mesh := SphereMesh.new()
 	mesh.radius = rng.randf_range(0.35, 0.65)
 	mesh.height = mesh.radius * 1.35
-	rock.mesh = mesh
-	rock.position = at + Vector3(0.0, mesh.radius * 0.45, 0.0)
-	rock.scale = Vector3(1.25, 0.8, 1.0)
+	mesh_instance.mesh = mesh
+	mesh_instance.position.y = mesh.radius * 0.45
+	mesh_instance.scale = Vector3(1.25, 0.8, 1.0)
 	var material := StandardMaterial3D.new()
 	material.albedo_color = Color(0.38, 0.40, 0.38)
-	rock.material_override = material
+	mesh_instance.material_override = material
+	rock.add_child(mesh_instance)
+
+	var rock_collision := CollisionShape3D.new()
+	var rock_shape := SphereShape3D.new()
+	rock_shape.radius = mesh.radius
+	rock_collision.shape = rock_shape
+	rock_collision.position.y = mesh.radius * 0.45
+	rock_collision.scale = Vector3(1.25, 0.8, 1.0)
+	rock.add_child(rock_collision)
 	add_child(rock)
 
 func _spawn_player() -> void:
