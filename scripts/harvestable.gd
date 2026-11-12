@@ -11,13 +11,11 @@ func _ready() -> void:
 	durability = max_durability
 	add_to_group("harvestable")
 
-func apply_hit() -> bool:
+func apply_hit(power: int = 1) -> bool:
 	if durability <= 0:
 		return false
-	durability -= 1
-	if durability <= 0:
-		return true
-	return false
+	durability = max(0, durability - max(1, power))
+	return durability <= 0
 
 func get_drops() -> Dictionary:
 	return drop_table.duplicate(true)
