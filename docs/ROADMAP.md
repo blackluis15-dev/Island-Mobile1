@@ -24,9 +24,13 @@
 
 ## Prototipo 0.3: supervivencia y agricultura
 - [ ] Hambre, sed, salud y energía.
-- [ ] Semillas, parcelas y preparación del suelo.
-- [ ] Riego y etapas de crecimiento.
-- [ ] Cosecha, almacenamiento y replantación.
+- [x] Semillas iniciales y cuatro parcelas de cultivo.
+- [x] Plantación y consumo de semillas.
+- [x] Riego con reserva inicial de agua.
+- [x] Crecimiento por etapas con tiempo de espera.
+- [x] Cosecha de frutos y recuperación de semillas.
+- [ ] Prueba en Godot; balance de tiempos y recursos.
+- [ ] Persistencia de cultivos al cerrar y abrir el juego.
 
 ## Prototipo 0.4: construcción y progresión
 - [ ] Colocación de construcciones con vista previa.
