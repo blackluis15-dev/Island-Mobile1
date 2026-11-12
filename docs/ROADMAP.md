@@ -14,6 +14,10 @@
 - [x] Durabilidad por recurso: árboles 5 impactos y rocas 3 impactos.
 - [x] Drops al completar la recolección: madera, hojas, brotes y piedra.
 - [x] Inventario inicial con cantidades visibles en pantalla.
+- [x] Herramientas iniciales: manos, hacha y pico.
+- [x] Hacha con mayor eficacia al talar; pico con mayor eficacia al romper rocas.
+- [x] Durabilidad inicial de 60 usos para cada herramienta.
+- [x] Cambio de herramienta desde botón táctil y tecla Q.
 - [ ] Prueba en Godot y ajuste de alcance, controles y balance.
 
 > Nota: las funciones anteriores ya están implementadas en código, pero no se consideran validadas hasta ejecutar el proyecto.
